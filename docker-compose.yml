@@ -1,0 +1,167 @@
+version: "3"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+    - "5434:5432"
+    volumes:
+    - /Users/piusonobhayedo/data/postgres:/data/postgres
+    env_file:
+    - docker.env
+#    networks:
+#    - postgres
+ 
+ # cockroachdb:
+ #   container_name: cockroachdb
+ #   image: cockroachdb
+ #   ports:
+ #   - "26257:26257"
+ #   volumes: 
+ #   - /Users/piusonobhayedo/data/cockroachdb:/data/cockroachdb
+ # pgadmin:
+ #   links:
+ #   - postgres:postgres2
+ #   container_name: pgadmin
+ #   image: dpage/pgadmin4
+ #   ports:
+ #   - "8080:80"
+ #   volumes:
+  #    - /Users/piusonobhayedo/data/pgadmin:/root/.pgadmin
+ #   env_file:
+   # - docker.env
+  #  networks:
+  #  - postgres
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: es01
+    environment:
+# Using single node for now. Hence I added the line below and commented out the cluster related ones.
+      - discovery.type=single-node
+#      - node.name=es01
+#      - cluster.name=es-docker-cluster
+#      - discovery.seed_hosts=es02,es03
+#      - cluster.initial_master_nodes=es01,es02,es03
+#      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=admin
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+#    volumes:
+#      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300 # this is here for single node
+#    networks:
+#      - elastic
+
+#  es02:
+#    image:  docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+#    container_name: es02
+#    environment:
+#      - node.name=es02
+#      - cluster.name=es-docker-cluster
+#      - discovery.seed_hosts=es01,es03
+#      - cluster.initial_master_nodes=es01,es02,es03
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#      - ELASTIC_PASSWORD=admin
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    volumes:
+#      - data02:/usr/share/elasticsearch/data
+#    networks:
+#      - elastic
+#  es03:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+#    container_name: es03
+#    environment:
+#      - node.name=es03
+#      - cluster.name=es-docker-cluster
+#      - discovery.seed_hosts=es01,es02
+#      - cluster.initial_master_nodes=es01,es02,es03
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#      - ELASTIC_PASSWORD=admin
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    volumes:
+#      - data03:/usr/share/elasticsearch/data
+#    networks:
+#      - elastic
+
+#volumes:
+#  data01:
+#    driver: local
+#  data02:
+#    driver: local
+#  data03:
+#    driver: local
+
+# entries for single redis instance
+
+#  redis:
+#    image: "redis:alpine"
+    
+#    command: redis-server --requirepass sOmE_sEcUrE_pAsS
+    
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - /Users/piusonobhayedo/data/redis-data:/var/lib/redis
+#      - /Users/piusonobhayedo/data/redis.conf:/usr/local/etc/redis/redis.conf
+
+#    environment:
+#      - REDIS_REPLICATION_MODE=master
+#    networks:
+#      node_net:
+#        ipv4_address: 172.28.1.4
+
+# networking for the Redis container
+#networks:
+#  node_net:
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 172.28.0.0/16
+
+
+  redis-master:
+    #image: 'bitnami/redis:latest'
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=my_master_password
+    volumes:
+      #- '/Users/piusonobhayedo/data/redis-data:/bitnami'
+      - '/Users/piusonobhayedo/data/redis:/var/lib/redis'
+
+  redis-replica:
+    #image: 'bitnami/redis:latest'
+    image: 'redis:alpine'
+    ports:
+      - '6379'
+    depends_on:
+      - redis-master
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_MASTER_PASSWORD=my_master_password
+      - REDIS_PASSWORD=my_replica_password
+
+
+networks:
+  postgres:
+    driver: bridge
+#  elastic:
+#    driver: bridge

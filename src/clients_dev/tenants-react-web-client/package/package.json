@@ -1,0 +1,6 @@
+{
+  "name": "tenants-react-web-client",
+  "version": "0.1.0",
+  "main": "index.js",
+  "typings": "index.d.ts"
+}

@@ -1,0 +1,123 @@
+@charset "utf-8";
+
+//As bulma is light by default, no properties are overridden here
+
+$modal-card-head-radius: '3px';
+$modal-card-foot-radius: '3px';
+
+//Now it is time to import all installed bulma or some specific packages. Installing all for now
+@import "node_modules/bulma/bulma.sass";
+
+/*
+//or import specific packages
+// Import only what you need from Bulma
+@import "node_modules/bulma/sass/utilities/_all.sass";
+@import "node_modules/bulma/sass/base/_all.sass";
+@import "node_modules/bulma/sass/elements/button.sass";
+@import "node_modules/bulma/sass/elements/container.sass";
+@import "node_modules/bulma/sass/elements/title.sass";
+@import "node_modules/bulma/sass/form/_all.sass";
+@import "node_modules/bulma/sass/components/navbar.sass";
+@import "node_modules/bulma/sass/layout/hero.sass";
+@import "node_modules/bulma/sass/layout/section.sass";
+*/
+
+//Also install specific extensions or all
+
+/*import specific extensions*/
+@import 'node_modules/bulma-extensions/bulma-accordion/src/sass/index.sass';
+@import 'node_modules/bulma-extensions/bulma-carousel/src/sass/index.sass';
+@import 'node_modules/bulma-extensions/bulma-calendar/src/sass/index.sass';
+
+//for below, see https://github.com/postare/bulma-modal-fx. npm i bulma-modal-fx
+// Modal minimal setup
+/*
+$transition-duration: .3s;
+$transition-duration-newsPaper: .7s;
+$transition-duration-3dslit: .5s;
+$modal-perspective: 1300px;
+$modal-bg-color: rgba($black,.86);
+@import 'node_modules/bulma-modal-fx/src/_scss/main.scss';
+*/
+
+/*Add miscellaneous CSS entries here as they arise during development*/
+//Below is to ensure that the carousel in home page does not show outline on focus
+#homeCarousel div:focus {
+    outline:none;
+}
+
+//I like to put a border below navbar in light mode
+.navbar{
+    border-bottom: 1px solid rgb(201, 201, 201);
+}
+
+/* Below are themes for autosuggest*/
+.react-autosuggest__container 
+{
+    position: relative;
+}
+    
+.react-autosuggest__input 
+{
+    width:          100%;
+    height:         36px;
+    padding:        10px;
+    border:         1px solid $grey;
+    border-radius:  4px;
+    background-color: $navbar-background-color;
+    color: $navbar-item-color;
+    font-size: 1em;
+}
+    
+.react-autosuggest__input--focused 
+{
+    outline: none;
+}
+    
+.react-autosuggest__input--open 
+{
+    border-bottom-left-radius:  0;
+    border-bottom-right-radius: 0;
+}
+    
+.react-autosuggest__suggestions-container
+{
+    display: none;
+}
+    
+.react-autosuggest__suggestions-container--open 
+{
+    display:            block;
+    position:           absolute;
+    top:                33px;
+    width:              100%;
+    min-width:          160px;
+    margin-left:        0;
+    background-color:   $navbar-background-color;
+    border-radius:      0 0 4px 4px;
+    z-index:            2;
+    box-shadow:         0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip:    padding-box;
+    color: $navbar-item-color;
+}
+    
+.react-autosuggest__suggestions-list 
+{
+    margin:             0;
+    padding:            0;
+    list-style-type:    none;
+}
+
+.react-autosuggest__suggestion 
+{
+    cursor:     pointer;
+    padding:    10px 20px;
+    list-style-type:    none;
+    
+}
+
+.react-autosuggest__suggestion--highlighted 
+{
+    color: $navbar-item-hover-color;
+    background-color: $navbar-item-hover-background-color;
+}
